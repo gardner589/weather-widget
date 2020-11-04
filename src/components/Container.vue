@@ -1,10 +1,15 @@
 <template>
   <div class="container">
-    <form class="" action="javascript:undefined;">
-      <input type="text" name="location" value="">
-      <button type="button" name="button">Go</button>
+    <form class="location-form" action="javascript:undefined;" v-if="!locationType">
+      <button type="button" name="getCurrentLocation" @click="getLocation()">Use Current Location</button>
+      <h2>Or</h2>
+      <div class="location-input">
+        <input type="text" name="location" v-model="inputValue">
+        <label for="location">City, State or Zip Code</label>
+        <button type="button" name="submit" @click="formSubmit(inputValue)">Submit</button>
+      </div>
     </form>
-    <weather-info :location="locationObj"/>
+    <weather-info :locationInfo="locationObj" v-if="locationType"/>
   </div>
 </template>
 
@@ -13,56 +18,61 @@ import WeatherInfo from './WeatherInfo'
 export default {
   data () {
     return {
-      locationObj: {
-        zip: '11418'
-      }
-      // weatherData: fetch('https://api.openweathermap.org/data/2.5/weather?zip=11418,us&units=imperial&appid=c93956b233247d73e54794d4d5d1d5d8')
-      //   .then(async res => {
-      //     let json = await res.json()
-      //     return json
-      //   }).catch(e => console.log(e.message)),
-      // feelsLike: '',
-      // currentTemp: '',
-      // highTemp: '',
-      // lowTemp: '',
-      // desc: '',
-      // icon: '',
-      // name: ''
+      locationObj: {},
+      locationType: '',
+      inputValue: ''
+
     }
   },
   components: {
     weatherInfo: WeatherInfo
   },
   methods: {
-    getLocation: () => {
+    getLocation: function () {
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(res => {
-          console.log(res)
+          console.log(res.coords)
+          this.locationType = 'geo'
+          this.locationObj.type = 'geo'
+          this.locationObj.lat = res.coords.latitude
+          this.locationObj.long = res.coords.longitude
         }, console.log('Unable to get geolocation.'))
       } else {
         console.log('Geolocation is not supported by this browser.')
       }
+    },
+    formSubmit: function (val) {
+      if (parseInt(val)) {
+        this.locationType = 'zip'
+        this.locationObj.zip = val
+      } else if (val.split(',').length > 1) {
+        this.locationType = 'city'
+        this.locationObj.city = val.split(',')[0]
+        this.locationObj.state = val.split(',')[1]
+      } else {
+        alert('Please enter city and state separated by comma or enter a zip code.')
+      }
+      this.locationObj.type = this.locationType
     }
   },
   created () {
-    this.getLocation()
-    // this.weatherData.then(wData => {
-    //   console.log(wData)
-    //   this.feelsLike = Math.round(wData.main.feels_like) + 'º'
-    //   this.currentTemp = Math.round(wData.main.temp) + 'º'
-    //   this.highTemp = Math.round(wData.main.temp_max) + 'º'
-    //   this.lowTemp = Math.round(wData.main.temp_min) + 'º'
-    //   this.desc = wData.weather[0].description.toUpperCase()
-    //   this.icon = `http://openweathermap.org/img/wn/${wData.weather[0].icon}@4x.png`
-    //   this.name = wData.name
-    // })
-    // const weatherData = fetch('https://api.openweathermap.org/data/2.5/weather?zip=11418,us&appid=c93956b233247d73e54794d4d5d1d5d8')
-    //                           .then( async res => {
-    //                             return await res.json()
-    //                           }).catch(e => console.log(e.message))
+
+  },
+  updated () {
   }
 }
 </script>
 
 <style lang="css" scoped>
+  .container {
+    display: flex;
+  }
+  .location-form {
+    display: flex;
+    flex-direction: column;
+  }
+  .location-input {
+    display: flex;
+    flex-direction: column;
+  }
 </style>

@@ -34,7 +34,7 @@ html, body {
   align-items: center;
   height: 100vh;
   width: 100vw;
-  background: linear-gradient(45deg, darkgrey 50%, black);
+  background: linear-gradient(45deg, tan 35%, royalblue);
   margin: 0;
   padding: 0;
   position: absolute;
