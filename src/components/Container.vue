@@ -54,11 +54,6 @@ export default {
       }
       this.locationObj.type = this.locationType
     }
-  },
-  created () {
-
-  },
-  updated () {
   }
 }
 </script>
