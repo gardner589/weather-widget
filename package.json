@@ -11,6 +11,7 @@
     "build": "node build/build.js"
   },
   "dependencies": {
+    "webpack-dev-server": "^2.9.1",
     "vue": "^2.5.2"
   },
   "devDependencies": {
@@ -61,7 +62,7 @@
     "webpack-merge": "^4.1.0"
   },
   "engines": {
-    "node": "v12.14.1",
+    "node": "12.14.1",
     "npm": "6.13.4"
   },
   "browserslist": [
