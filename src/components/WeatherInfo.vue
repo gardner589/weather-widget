@@ -53,7 +53,7 @@ export default {
   },
   created () {
     this.getWeatherData(this.locationInfo)
-  },
+  }
   // components: {
   //   forecast: Forecast
   // }
